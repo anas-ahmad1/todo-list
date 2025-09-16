@@ -32,20 +32,20 @@ const getTasks = asyncHandler(async (req, res) => {
 
 // Fetch a task based on id
 const getTaskById = asyncHandler(async (req, res) => {
-  const task = await Task.findById(req.params.id);
+    const task = await Task.findById(req.params.id);
 
-  if (!task) {
+    if (!task) {
     res.status(404);
     throw new Error("Task not found");
-  }
+    }
 
-  // Check if the task found belongs to the logged in user or not
-  if (task.user.toString() !== req.user.id) {
+    // Check if the task found belongs to the logged in user or not
+    if (task.user.toString() !== req.user.id) {
     res.status(401);
     throw new Error("Not authorized to view this task");
-  }
+    }
 
-  res.status(200).json(task);
+    res.status(200).json(task);
 });
 
 
@@ -77,5 +77,26 @@ const updateTask = asyncHandler(async (req, res) => {
     res.status(200).json(updatedTask);
 });
 
+
+// Delete a specific task
+const deleteTask = asyncHandler(async (req, res) => {
+
+    const task = await Task.findById(req.params.id);
+
+    if (!task) {
+        res.status(404);
+        throw new Error("Task not found");
+    }
+
+    if (task.user.toString() !== req.user.id) {
+        res.status(401);
+        throw new Error("Not authorized to delete this task");
+    }
+
+    await task.deleteOne();
+
+    res.status(200).json({ message: "Task deleted successfully" });
+});
+
   
-module.exports = { createTask, getTasks, getTaskById, updateTask };
+module.exports = { createTask, getTasks, getTaskById, updateTask, deleteTask };
