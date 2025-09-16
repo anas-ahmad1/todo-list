@@ -6,3 +6,12 @@ export const BACKEND_ROUTES = {
         GETUSER: '/auth/me'
     }
 } as const;
+
+
+export const FRONTEND_ROUTES = {
+    AUTH:
+    {
+        LOGIN: '/auth/login',
+        SIGNUP: '/auth/signup'
+    }
+} as const;

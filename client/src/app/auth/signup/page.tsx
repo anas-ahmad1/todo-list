@@ -8,27 +8,28 @@ import { BACKEND_ROUTES, FRONTEND_ROUTES } from '@/utils/routes';
 import axios from 'axios';
 import { useUser } from '@/context/UserContext';
 
-type LoginFormInputs = {
+type SignupFormInputs = {
+  name: string
   email: string
   password: string
 }
 
 
-export default function Login() {
+export default function Signup() {
   const router = useRouter()
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>()
+  const { register, handleSubmit, formState: { errors } } = useForm<SignupFormInputs>()
   
   const [showPassword, setShowPassword] = useState(false)
 
   const { setUser } = useUser()
 
-  const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
+  const onSubmit: SubmitHandler<SignupFormInputs> = async (data) => {
 
-    const { email, password } = data
-    const url = API_URL + BACKEND_ROUTES.AUTH.LOGIN;
+    const { name, email, password } = data
+    const url = API_URL + BACKEND_ROUTES.AUTH.REGISTER;
 
     try {
-      const res = await axios.post(url, { email, password });
+      const res = await axios.post(url, { name, email, password });
       setUser(res.data);
       localStorage.setItem('token', res.data.token);
       router.push('/');
@@ -43,10 +44,10 @@ export default function Login() {
       <div className="flex min-h-screen">
         <div className="w-2/5 bg-black flex flex-col justify-center items-center px-6">
           <h1 className="text-5xl font-bold text-white mb-4 text-center">
-            Welcome to TaskFlow
+            Create Your TaskFlow Account
           </h1>
           <p className="text-lg text-gray-300 text-center">
-            Manage your tasks efficiently and stay organized
+            Join TaskFlow and start organizing your tasks effortlessly
           </p>
         </div>
 
@@ -54,10 +55,21 @@ export default function Login() {
         <div className="w-3/5 flex bg-white items-center justify-center">
           <div className="w-full max-w-md bg-black p-8">
             
-            <h1 className="text-3xl text-center text-white">Login</h1>
+            <h1 className="text-3xl text-center text-white">Signup</h1>
             
             <form onSubmit={handleSubmit(onSubmit)}>
               
+              <div className="mb-4">
+                <label htmlFor="name" className="block mb-1 text-white">Name</label>
+                <input
+                  id="name"
+                  type="name"
+                  className="w-full border px-3 py-2"
+                  {...register('name', { required: 'Name is required' })}
+                />
+                {errors.name && <p className="text-red-500 mt-1 text-sm">{errors.name.message}</p>}
+              </div>
+
               <div className="mb-4">
                 <label htmlFor="email" className="block mb-1 text-white">Email</label>
                 <input
@@ -93,13 +105,13 @@ export default function Login() {
                 type="submit"
                 className="w-full bg-white text-black py-2 mb-4"
               >
-                Login
+                Signup
               </button>
 
               <p className="text-center text-sm text-white">
-                Dont have an account?
-                <button type="button" onClick={() => router.push(FRONTEND_ROUTES.AUTH.SIGNUP)} className="text-white underline">
-                  Signup
+                Already have an account?
+                <button type="button" onClick={() => router.push(FRONTEND_ROUTES.AUTH.LOGIN)} className="text-white underline">
+                  Login
                 </button>
               </p>
 
