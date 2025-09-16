@@ -1,7 +1,7 @@
 const Task = require("../models/Task");
 const asyncHandler = require("express-async-handler");
 
-
+// Create a task for the logged in user
 const createTask = asyncHandler(async (req, res) => {
     const { title, description, priority, dueDate } = req.body;
 
@@ -22,5 +22,12 @@ const createTask = asyncHandler(async (req, res) => {
     res.status(201).json(task);
 });
 
+
+// Fetch all the tasks of the logged in user
+const getTasks = asyncHandler(async (req, res) => {
+    const tasks = await Task.find({ user: req.user.id });
+    res.status(200).json(tasks);
+});
+
   
-module.exports = { createTask };
+module.exports = { createTask, getTasks };
