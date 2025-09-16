@@ -48,5 +48,34 @@ const getTaskById = asyncHandler(async (req, res) => {
   res.status(200).json(task);
 });
 
+
+
+// Update a specific task
+const updateTask = asyncHandler(async (req, res) => {
+    const { title, description, completed, priority, dueDate } = req.body;
+
+    const task = await Task.findById(req.params.id);
+
+    if (!task) {
+        res.status(404);
+        throw new Error("Task not found");
+    }
+
+    if (task.user.toString() !== req.user.id) {
+        res.status(401);
+        throw new Error("Not authorized to update this task");
+    }
+
+    if (title !== undefined) task.title = title;
+    if (description !== undefined) task.description = description;
+    if (completed !== undefined) task.completed = completed;
+    if (priority !== undefined) task.priority = priority;
+    if (dueDate !== undefined) task.dueDate = dueDate;
+
+    const updatedTask = await task.save();
+
+    res.status(200).json(updatedTask);
+});
+
   
-module.exports = { createTask, getTasks, getTaskById };
+module.exports = { createTask, getTasks, getTaskById, updateTask };
