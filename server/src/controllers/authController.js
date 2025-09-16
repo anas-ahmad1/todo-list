@@ -45,6 +45,27 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
 
+  const loginUser = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+
+    // Check if user exists through email
+    const user = await User.findOne({ email });
+
+    // Not giving two different errors for security purposes
+    if (user && (await bcrypt.compare(password, user.password))) {
+      res.json({
+        _id: user.id,
+        name: user.name,
+        email: user.email,
+        token: generateToken(user._id),
+      });
+    } else {
+      res.status(400).json({ message: "Invalid credentials" });
+      throw new Error("Invalid credentials");
+    }
+  });
+
+
 
 
   const generateToken = (id) => {
@@ -53,4 +74,4 @@ const registerUser = asyncHandler(async (req, res) => {
     });
   };
   
-  module.exports = { registerUser };
+  module.exports = { registerUser, loginUser };
