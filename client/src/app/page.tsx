@@ -14,7 +14,7 @@ export default function Home() {
   };
 
   return (
-    
+    <ProtectedRoute>
     <div className="min-h-screen flex flex-col mt-20 items-center px-6">
       <h1 className="text-4xl md:text-6xl font-bold mb-6 text-center">
         Welcome {user?.name ?? "Guest"}!
@@ -29,6 +29,6 @@ export default function Home() {
         Go to My Tasks
       </button>
     </div>
-    
+    </ProtectedRoute>
   );
 }
