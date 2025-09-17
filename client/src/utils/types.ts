@@ -6,3 +6,10 @@ export type Task = {
     dueDate: string;
     completed: boolean;
 };
+
+export type TaskFormData = {
+    title: string;
+    description: string;
+    priority: "Low" | "Medium" | "High";
+    dueDate: string;
+};
