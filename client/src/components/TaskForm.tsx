@@ -16,8 +16,8 @@ const TaskForm = ({
   editingTask,
 }: TaskFormProps) => {
   return (
-    <div className="bg-white border-b border-gray-200 px-6 py-4">
-      <h2 className="text-xl font-semibold mb-4 text-gray-800">
+    <div className="container-bg px-6 py-4">
+      <h2 className="text-xl font-semibold mb-4">
         {editingTask ? "Edit Task" : "Add New Task"}
       </h2>
 
@@ -25,7 +25,7 @@ const TaskForm = ({
         <div>
           <label
             htmlFor="title"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium mb-1"
           >
             Title
           </label>
@@ -36,7 +36,7 @@ const TaskForm = ({
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
             }
-            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+            className="w-full px-3 py-2"
             required
           />
         </div>
@@ -44,7 +44,7 @@ const TaskForm = ({
         <div>
           <label
             htmlFor="description"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium mb-1"
           >
             Description
           </label>
@@ -55,14 +55,14 @@ const TaskForm = ({
             onChange={(e) =>
               setFormData({ ...formData, description: e.target.value })
             }
-            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+            className="w-full px-3 py-2"
           />
         </div>
 
         <div>
           <label
             htmlFor="priority"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium mb-1"
           >
             Priority
           </label>
@@ -75,7 +75,7 @@ const TaskForm = ({
                 priority: e.target.value as "Low" | "Medium" | "High",
               })
             }
-            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+            className="w-full px-3 py-2"
             required
           >
             <option value="Low">Low</option>
@@ -87,7 +87,7 @@ const TaskForm = ({
         <div>
           <label
             htmlFor="dueDate"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium mb-1"
           >
             Due Date
           </label>
@@ -99,20 +99,19 @@ const TaskForm = ({
             onChange={(e) =>
               setFormData({ ...formData, dueDate: e.target.value })
             }
-            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+            className="w-full px-3 py-2"
             required
           />
         </div>
-
-        <div className="md:col-span-2 lg:col-span-4">
+      </div>
+      <div className="mt-8 flex justify-center">
           <button
             type="button"
             onClick={onSubmit}
-            className="px-6 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors"
+            className="px-6 py-2 rounded-lg primary-bg"
           >
             {editingTask ? "Update Task" : "Add Task"}
           </button>
-        </div>
       </div>
     </div>
   );

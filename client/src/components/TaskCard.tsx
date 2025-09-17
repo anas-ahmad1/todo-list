@@ -33,12 +33,12 @@ const TaskCard: FC<TaskCardProps> = ({
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 mb-3 shadow-sm">
+    <div className="container-bg rounded-2xl p-4 mb-3 shadow-sm">
       <div className="flex justify-between items-start mb-2">
         <div className="flex-1">
           <h3
             className={`font-semibold text-lg ${
-              isCompleted ? "line-through text-gray-500" : "text-gray-800"
+              isCompleted ? "line-through" : ''
             }`}
           >
             {task.title}
@@ -46,7 +46,7 @@ const TaskCard: FC<TaskCardProps> = ({
           {task.description && (
             <p
               className={`text-sm mt-1 ${
-                isCompleted ? "line-through text-gray-400" : "text-gray-600"
+                isCompleted ? "line-through" : ''
               }`}
             >
               {task.description}
@@ -54,7 +54,7 @@ const TaskCard: FC<TaskCardProps> = ({
           )}
         </div>
         <span
-          className={`px-2 py-1 text-xs rounded-full ${getPriorityColor(
+          className={`px-4 py-1 text-xs rounded-2xl ${getPriorityColor(
             task.priority
           )}`}
         >
@@ -64,9 +64,7 @@ const TaskCard: FC<TaskCardProps> = ({
 
       <div className="flex justify-between items-center">
         <span
-          className={`text-sm ${
-            isCompleted ? "text-gray-400" : "text-gray-500"
-          }`}
+          className="text-sm"
         >
           {task.dueDate}
         </span>

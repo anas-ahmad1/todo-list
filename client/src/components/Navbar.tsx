@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useUser } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
 import { FRONTEND_ROUTES } from "@/utils/routes";
+import { FaSun, FaMoon } from "react-icons/fa";
 
 const Navbar = () => {
   const { user, setUser } = useUser();
@@ -15,7 +16,7 @@ const Navbar = () => {
     const savedTheme = localStorage.getItem("theme") as "light" | "dark";
     if (savedTheme) {
       setTheme(savedTheme);
-      if(savedTheme === 'dark'){
+      if (savedTheme === "dark") {
         document.documentElement.classList.add("dark-theme");
       }
     }
@@ -27,8 +28,8 @@ const Navbar = () => {
     localStorage.setItem("theme", newTheme);
 
     const root = document.documentElement;
-    if(newTheme === 'dark'){
-        root.classList.add("dark-theme");
+    if (newTheme === "dark") {
+      root.classList.add("dark-theme");
     } else {
       root.classList.remove("dark-theme");
     }
@@ -47,15 +48,17 @@ const Navbar = () => {
       <div className="flex">
         <button
           onClick={toggleTheme}
-          className={`w-12 h-6 flex items-center rounded-full p-1 ${
-            theme === "dark" ? "bg-gray-800" : "bg-gray-300"
-          }`}
+          className="w-12 h-6 flex items-center rounded-full p-1 container-bg"
         >
           <div
-            className={`w-4 h-4 rounded-full bg-white transform transition-transform ${
-              theme === "dark" ? "translate-x-6" : "translate-x-0"
+            className={`w-4 h-4 rounded-full transform transition-transform ${
+              theme === "dark"
+                ? "translate-x-6 text-white"
+                : "translate-x-0 text-yellow-400"
             }`}
-          />
+          >
+            {theme === "dark" ? <FaMoon /> : <FaSun />}
+          </div>
         </button>
       </div>
 

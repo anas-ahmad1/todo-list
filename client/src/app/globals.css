@@ -38,7 +38,7 @@ body {
   background-color: var(--primary-color);
 }
 
-input {
+input, select {
   background-color: var(--input-fields-color);
   border: 1px solid var(--primary-color);
   border-radius: 0.5rem;
@@ -49,10 +49,14 @@ input {
   border-bottom: 4px solid var(--background);
 }
 
-h1 {
+h1, h2, h3 {
   color: var(--text-headings-color);
 }
 
 p{
   color: var(--text-subheadings-color)
+}
+
+button:hover{
+  cursor: pointer;
 }
