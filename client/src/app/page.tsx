@@ -123,7 +123,13 @@ export default function Home() {
                   key={category._id}
                   id={category._id}
                   name={category.name}
-                  onClick={() => router.push(`/tasks?category=${category._id}`)}
+                  onClick={() =>
+                    router.push(
+                      `/tasks?categoryId=${
+                        category._id
+                      }&categoryName=${encodeURIComponent(category.name)}`
+                    )
+                  }
                   onDelete={deleteCategory}
                 />
               ))}

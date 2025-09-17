@@ -18,7 +18,8 @@ const TodoList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("All");
   const searchParams = useSearchParams();
-  const categoryId = searchParams.get("category") || "";
+  const categoryId = searchParams.get("categoryId") || "";
+  const categoryName = searchParams.get("categoryName") || "";
   const [formData, setFormData] = useState<TaskFormData>({
     title: "",
     description: "",
@@ -149,7 +150,7 @@ const TodoList = () => {
   return (
     <ProtectedRoute>
       <div className="min-h-screen">
-        <Header onAddTask={handleAddTask} showAddForm={showAddForm} />
+        <Header onAddTask={handleAddTask} showAddForm={showAddForm} categoryName={categoryName} />
 
         <div className="flex w-full mb-4 justify-center">
           <div className="flex gap-2 w-full lg:w-1/2 px-6">
