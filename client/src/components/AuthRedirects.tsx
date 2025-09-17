@@ -4,6 +4,7 @@ import { ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/context/UserContext';
 import { FRONTEND_ROUTES } from '@/utils/routes';
+import Spinner from '@/components/Spinner'
 
 
 export function ProtectedRoute({ children }: { children: ReactNode }) {
@@ -16,14 +17,9 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
     }
     }, [user, loading, router]);
 
-    if (loading) {
-        return <p className="text-center mt-10">Loading user...</p>
-    }
-
-    if (!user) {
-        return <p className="text-center mt-10">Redirecting...</p>;
-    }
-
+    if (loading) return <Spinner />
+    if (!user) return <Spinner />
+    
     return <>{children}</>;
 }
 
