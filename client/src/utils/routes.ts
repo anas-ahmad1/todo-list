@@ -5,7 +5,8 @@ export const BACKEND_ROUTES = {
         REGISTER: '/auth/register',
         GETUSER: '/auth/me'
     }, 
-    TASKS: '/tasks'
+    TASKS: '/tasks',
+    CATEGORIES: '/categories'
 
 } as const;
 
