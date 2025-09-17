@@ -8,6 +8,7 @@ import TaskContainer from "@/components/TaskContainer";
 import { BACKEND_ROUTES } from "@/utils/routes";
 import axios from "axios";
 import { API_URL } from "@/utils/config";
+import { ProtectedRoute } from "@/components/AuthRedirects";
 
 const TodoList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -127,44 +128,46 @@ const TodoList = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      <Header onAddTask={handleAddTask} showAddForm={showAddForm} />
+    <ProtectedRoute>
+      <div className="min-h-screen">
+        <Header onAddTask={handleAddTask} showAddForm={showAddForm} />
 
-      {showAddForm && (
-        <TaskForm
-          formData={formData}
-          setFormData={setFormData}
-          onSubmit={handleSubmit}
-          editingTask={editingTask}
-        />
-      )}
-
-      <div className="p-6">
-        <div className="flex flex-col xl:flex-row gap-6 min-h-[calc(100vh-200px)]">
-          <TaskContainer
-            title="Todo"
-            tasks={todoTasks}
-            isCompleted={false}
-            emptyMessage="No tasks yet"
-            emptySubMessage="Add a task to get started"
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            onToggleComplete={handleMarkComplete}
+        {showAddForm && (
+          <TaskForm
+            formData={formData}
+            setFormData={setFormData}
+            onSubmit={handleSubmit}
+            editingTask={editingTask}
           />
+        )}
 
-          <TaskContainer
-            title="Completed"
-            tasks={completedTasks}
-            isCompleted={true}
-            emptyMessage="No completed tasks"
-            emptySubMessage="Complete some tasks to see them here"
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            onToggleComplete={handleMarkComplete}
-          />
+        <div className="p-6">
+          <div className="flex flex-col xl:flex-row gap-6 min-h-[calc(100vh-200px)]">
+            <TaskContainer
+              title="Todo"
+              tasks={todoTasks}
+              isCompleted={false}
+              emptyMessage="No tasks yet"
+              emptySubMessage="Add a task to get started"
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onToggleComplete={handleMarkComplete}
+            />
+
+            <TaskContainer
+              title="Completed"
+              tasks={completedTasks}
+              isCompleted={true}
+              emptyMessage="No completed tasks"
+              emptySubMessage="Complete some tasks to see them here"
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onToggleComplete={handleMarkComplete}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 };
 

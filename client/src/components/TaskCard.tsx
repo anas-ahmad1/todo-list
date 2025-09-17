@@ -3,6 +3,7 @@
 import { FC } from "react";
 import type { Task } from "../utils/types";
 import TaskActions from "./TaskActions";
+import { getPriorityColor } from "../utils/taskUtils";
 
 export interface TaskCardProps {
   task: Task;
@@ -19,19 +20,9 @@ const TaskCard: FC<TaskCardProps> = ({
   onDelete,
   onToggleComplete,
 }) => {
-  const getPriorityColor = (priority: string): string => {
-    switch (priority) {
-      case "High":
-        return "bg-red-100 text-red-800";
-      case "Medium":
-        return "bg-yellow-100 text-yellow-800";
-      case "Low":
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
 
+  const { title, description, priority, dueDate } = task;
+  
   return (
     <div className="container-bg rounded-2xl p-4 mb-3 shadow-sm">
       <div className="flex justify-between items-start mb-2">
@@ -41,7 +32,7 @@ const TaskCard: FC<TaskCardProps> = ({
               isCompleted ? "line-through" : ''
             }`}
           >
-            {task.title}
+            {title}
           </h3>
           {task.description && (
             <p
@@ -49,7 +40,7 @@ const TaskCard: FC<TaskCardProps> = ({
                 isCompleted ? "line-through" : ''
               }`}
             >
-              {task.description}
+              {description}
             </p>
           )}
         </div>
@@ -58,7 +49,7 @@ const TaskCard: FC<TaskCardProps> = ({
             task.priority
           )}`}
         >
-          {task.priority}
+          {priority}
         </span>
       </div>
 
@@ -66,7 +57,7 @@ const TaskCard: FC<TaskCardProps> = ({
         <span
           className="text-sm"
         >
-          {task.dueDate}
+          {dueDate}
         </span>
 
         <TaskActions
