@@ -14,15 +14,14 @@ const TodoList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [priorityFilter, setPriorityFilter] = useState("All");
   const [formData, setFormData] = useState<TaskFormData>({
     title: "",
     description: "",
     priority: "Low",
     dueDate: "",
   });
-
-  const todoTasks = tasks.filter((task) => !task.completed);
-  const completedTasks = tasks.filter((task) => task.completed);
 
   const url = API_URL + BACKEND_ROUTES.TASKS;
 
@@ -127,10 +126,49 @@ const TodoList = () => {
     }
   };
 
+  // Filter tasks based on search
+  const filteredTasks = tasks.filter((task) => {
+    const matchesSearch = task.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+
+    const matchesPriority =
+      priorityFilter === "All" || task.priority === priorityFilter;
+
+    return matchesSearch && matchesPriority;
+  });
+
+  // Set todo tasks list and completed tasks list
+  const todoTasks = filteredTasks.filter((task) => !task.completed);
+  const completedTasks = filteredTasks.filter((task) => task.completed);
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen">
         <Header onAddTask={handleAddTask} showAddForm={showAddForm} />
+
+        <div className="flex w-full mb-4 justify-center">
+          <div className="flex gap-2 w-full lg:w-1/2 px-6">
+            <input
+              type="text"
+              placeholder="Search tasks..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="border p-2 rounded flex-1 w-3/4"
+            />
+
+            <select
+              value={priorityFilter}
+              onChange={(e) => setPriorityFilter(e.target.value)}
+              className="border p-2 rounded w-1/4"
+            >
+              <option value="All">All</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+        </div>
 
         {showAddForm && (
           <TaskForm
