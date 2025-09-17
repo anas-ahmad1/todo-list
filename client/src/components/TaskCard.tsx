@@ -2,13 +2,15 @@
 
 import { FC } from "react";
 import type { Task } from "../utils/types";
+import TaskActions from "./TaskActions";
 
 export interface TaskCardProps {
   task: Task;
   isCompleted: boolean;
+  onEdit: (task: Task) => void;
 }
 
-const TaskCard: FC<TaskCardProps> = ({ task, isCompleted }) => {
+const TaskCard: FC<TaskCardProps> = ({ task, isCompleted, onEdit }) => {
   const getPriorityColor = (priority: string): string => {
     switch (priority) {
       case "High":
@@ -60,6 +62,8 @@ const TaskCard: FC<TaskCardProps> = ({ task, isCompleted }) => {
         >
           {task.dueDate}
         </span>
+
+        <TaskActions task={task} isCompleted={isCompleted} onEdit={onEdit} />
       </div>
     </div>
   );

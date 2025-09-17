@@ -11,6 +11,7 @@ import { API_URL } from "@/utils/config";
 
 const TodoList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState<TaskFormData>({
     title: "",
@@ -44,30 +45,61 @@ const TodoList = () => {
     fetchTasks();
   }, []);
 
+  // Backend call to update a specific task based on its id
+  const updateTask = async (taskId: string, updatedData: Partial<Task>) => {
+    try {
+      const res = await axios.put(`${url}/${taskId}`, updatedData, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      setTasks(tasks.map((task) => (task._id === taskId ? res.data : task)));
+    } catch (err) {
+      console.error("Error updating task:", (err as Error).message);
+    }
+  };
+
   // Shows or hides create task form and clear fields
   const handleAddTask = () => {
     setShowAddForm(!showAddForm);
     setFormData({ title: "", description: "", priority: "Low", dueDate: "" });
   };
 
-  // Form submission method to create task
+  // Form submission method to create or edit task
   const handleSubmit = async () => {
-    try {
-      const res = await axios.post(
-        url,
-        { ...formData, completed: false },
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
-      const newTask: Task = res.data;
-      setTasks([...tasks, newTask]);
-    } catch (err) {
-      console.error("Error creating task:", (err as Error).message);
+    if (editingTask) {
+      await updateTask(editingTask._id, formData);
+      setEditingTask(null);
+    } else {
+      try {
+        const res = await axios.post(
+          url,
+          { ...formData, completed: false },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        const newTask: Task = res.data;
+        setTasks([...tasks, newTask]);
+      } catch (err) {
+        console.error("Error creating task:", (err as Error).message);
+      }
     }
 
     setFormData({ title: "", description: "", priority: "Low", dueDate: "" });
     setShowAddForm(false);
+  };
+
+  // Opens the form to edit and fills the selected task's data
+  const handleEdit = (task: Task) => {
+    setEditingTask(task);
+    setShowAddForm(true);
+    setFormData({
+      title: task.title,
+      description: task.description || "",
+      priority: task.priority,
+      dueDate: task.dueDate,
+    });
   };
 
   return (
@@ -79,6 +111,7 @@ const TodoList = () => {
           formData={formData}
           setFormData={setFormData}
           onSubmit={handleSubmit}
+          editingTask={editingTask}
         />
       )}
 
@@ -90,6 +123,7 @@ const TodoList = () => {
             isCompleted={false}
             emptyMessage="No tasks yet"
             emptySubMessage="Add a task to get started"
+            onEdit={handleEdit}
           />
 
           <TaskContainer
@@ -98,6 +132,7 @@ const TodoList = () => {
             isCompleted={true}
             emptyMessage="No completed tasks"
             emptySubMessage="Complete some tasks to see them here"
+            onEdit={handleEdit}
           />
         </div>
       </div>
