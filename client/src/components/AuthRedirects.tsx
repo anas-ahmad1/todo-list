@@ -4,22 +4,22 @@ import { ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/context/UserContext';
 import { FRONTEND_ROUTES } from '@/utils/routes';
+import Spinner from '@/components/Spinner'
 
 
 export function ProtectedRoute({ children }: { children: ReactNode }) {
-    const { user } = useUser();
+    const { user, loading } = useUser();
     const router = useRouter();
 
     useEffect(() => {
-    if (!user) {
+    if (!loading && !user) {
         router.push(FRONTEND_ROUTES.AUTH.LOGIN);
     }
-    }, [user, router]);
+    }, [user, loading, router]);
 
-    if (!user) {
-        return <p className="text-center mt-10">Redirecting...</p>;
-    }
-
+    if (loading) return <Spinner />
+    if (!user) return <Spinner />
+    
     return <>{children}</>;
 }
 

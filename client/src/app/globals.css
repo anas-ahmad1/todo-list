@@ -5,7 +5,7 @@
   --foreground: #171717;
   --container-color: #FFFFFF;
   --primary-color: #A5B4FC;
-  --secondary-color: #FBCFE8;
+  --secondary-color: #7182d3;
   --text-headings-color: #111827;
   --text-subheadings-color: #434f66;
   --input-fields-color: #F3F4F6;
@@ -17,7 +17,7 @@
   --foreground: #ededed;
   --container-color: #1F2937;
   --primary-color: #515aaf;
-  --secondary-color: #F472B6;
+  --secondary-color: #38408f;
   --text-headings-color: #F9FAFB;
   --text-subheadings-color: #c0c8d6;
   --input-fields-color: #374151;
@@ -40,8 +40,14 @@ body {
 
 input, select {
   background-color: var(--input-fields-color);
-  border: 1px solid var(--primary-color);
+  border: 2px solid var(--primary-color);
   border-radius: 0.5rem;
+}
+
+input:focus,
+select:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(165, 180, 252, 0.5);
 }
 
 .navbar-bg {

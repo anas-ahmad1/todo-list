@@ -60,6 +60,7 @@ const TodoList = () => {
   // Shows or hides create task form and clear fields
   const handleAddTask = () => {
     setShowAddForm(!showAddForm);
+    setEditingTask(null);
     setFormData({ title: "", description: "", priority: "Low", dueDate: "" });
   };
 
