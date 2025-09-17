@@ -102,6 +102,22 @@ const TodoList = () => {
     });
   };
 
+  // Backend call to delete a specific task
+  const deleteTask = async (taskId: string) => {
+    try {
+      await axios.delete(`${url}/${taskId}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      setTasks(tasks.filter((task) => task._id !== taskId));
+    } catch (err) {
+      console.error("Error deleting task:", (err as Error).message);
+    }
+  };
+
+  const handleDelete = (taskId: string) => {
+    deleteTask(taskId);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header onAddTask={handleAddTask} showAddForm={showAddForm} />
@@ -124,6 +140,7 @@ const TodoList = () => {
             emptyMessage="No tasks yet"
             emptySubMessage="Add a task to get started"
             onEdit={handleEdit}
+            onDelete={handleDelete}
           />
 
           <TaskContainer
@@ -133,6 +150,7 @@ const TodoList = () => {
             emptyMessage="No completed tasks"
             emptySubMessage="Complete some tasks to see them here"
             onEdit={handleEdit}
+            onDelete={handleDelete}
           />
         </div>
       </div>

@@ -7,12 +7,14 @@ export interface TaskActionsProps {
   task: Task;
   isCompleted: boolean;
   onEdit: (task: Task) => void;
+  onDelete: (taskId: string) => void;
 }
 
 const TaskActions: FC<TaskActionsProps> = ({
   task,
   isCompleted,
   onEdit,
+  onDelete,
 }) => (
   <div className="flex space-x-2">
     {!isCompleted && (
@@ -23,6 +25,13 @@ const TaskActions: FC<TaskActionsProps> = ({
         Edit
       </button>
     )}
+
+    <button
+      onClick={() => onDelete(task._id)}
+      className="px-3 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
+    >
+      Delete
+    </button>
   </div>
 );
 
