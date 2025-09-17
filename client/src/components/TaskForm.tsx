@@ -1,17 +1,25 @@
 "use client";
 
-import type { TaskFormData } from "../utils/types";
+import type { Task, TaskFormData } from "../utils/types";
 
 interface TaskFormProps {
   formData: TaskFormData;
   setFormData: (data: TaskFormData) => void;
   onSubmit: () => void;
+  editingTask: Task | null;
 }
 
-const TaskForm = ({ formData, setFormData, onSubmit }: TaskFormProps) => {
+const TaskForm = ({
+  formData,
+  setFormData,
+  onSubmit,
+  editingTask,
+}: TaskFormProps) => {
   return (
     <div className="bg-white border-b border-gray-200 px-6 py-4">
-      <h2 className="text-xl font-semibold mb-4 text-gray-800">Add New Task</h2>
+      <h2 className="text-xl font-semibold mb-4 text-gray-800">
+        {editingTask ? "Edit Task" : "Add New Task"}
+      </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div>
@@ -102,7 +110,7 @@ const TaskForm = ({ formData, setFormData, onSubmit }: TaskFormProps) => {
             onClick={onSubmit}
             className="px-6 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors"
           >
-            Add Task
+            {editingTask ? "Update Task" : "Add Task"}
           </button>
         </div>
       </div>
