@@ -7,14 +7,18 @@ import { FRONTEND_ROUTES } from '@/utils/routes';
 
 
 export function ProtectedRoute({ children }: { children: ReactNode }) {
-    const { user } = useUser();
+    const { user, loading } = useUser();
     const router = useRouter();
 
     useEffect(() => {
-    if (!user) {
+    if (!loading && !user) {
         router.push(FRONTEND_ROUTES.AUTH.LOGIN);
     }
-    }, [user, router]);
+    }, [user, loading, router]);
+
+    if (loading) {
+        return <p className="text-center mt-10">Loading user...</p>
+    }
 
     if (!user) {
         return <p className="text-center mt-10">Redirecting...</p>;
