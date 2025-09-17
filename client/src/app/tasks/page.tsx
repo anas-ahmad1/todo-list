@@ -118,6 +118,14 @@ const TodoList = () => {
     deleteTask(taskId);
   };
 
+  // Calls the update method when a task is completed
+  const handleMarkComplete = (taskId: string) => {
+    const task = tasks.find((t) => t._id === taskId);
+    if (task) {
+      updateTask(taskId, { completed: !task.completed });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header onAddTask={handleAddTask} showAddForm={showAddForm} />
@@ -141,6 +149,7 @@ const TodoList = () => {
             emptySubMessage="Add a task to get started"
             onEdit={handleEdit}
             onDelete={handleDelete}
+            onToggleComplete={handleMarkComplete}
           />
 
           <TaskContainer
@@ -151,6 +160,7 @@ const TodoList = () => {
             emptySubMessage="Complete some tasks to see them here"
             onEdit={handleEdit}
             onDelete={handleDelete}
+            onToggleComplete={handleMarkComplete}
           />
         </div>
       </div>

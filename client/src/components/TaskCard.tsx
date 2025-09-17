@@ -9,6 +9,7 @@ export interface TaskCardProps {
   isCompleted: boolean;
   onEdit: (task: Task) => void;
   onDelete: (taskId: string) => void;
+  onToggleComplete: (taskId: string) => void;
 }
 
 const TaskCard: FC<TaskCardProps> = ({
@@ -16,6 +17,7 @@ const TaskCard: FC<TaskCardProps> = ({
   isCompleted,
   onEdit,
   onDelete,
+  onToggleComplete,
 }) => {
   const getPriorityColor = (priority: string): string => {
     switch (priority) {
@@ -74,6 +76,7 @@ const TaskCard: FC<TaskCardProps> = ({
           isCompleted={isCompleted}
           onEdit={onEdit}
           onDelete={onDelete}
+          onToggleComplete={onToggleComplete}
         />
       </div>
     </div>

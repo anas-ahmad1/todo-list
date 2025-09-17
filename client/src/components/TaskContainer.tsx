@@ -11,6 +11,7 @@ export interface TaskContainerProps {
   emptySubMessage: string;
   onEdit: (task: Task) => void;
   onDelete: (taskId: string) => void;
+  onToggleComplete: (taskId: string) => void;
 }
 
 const TaskContainer: FC<TaskContainerProps> = ({
@@ -21,6 +22,7 @@ const TaskContainer: FC<TaskContainerProps> = ({
   emptySubMessage,
   onEdit,
   onDelete,
+  onToggleComplete,
 }) => (
   <div className="w-full xl:w-1/2">
     <div className="bg-white rounded-xl border-2 border-gray-200 p-6 h-full">
@@ -36,6 +38,7 @@ const TaskContainer: FC<TaskContainerProps> = ({
               isCompleted={isCompleted}
               onEdit={onEdit}
               onDelete={onDelete}
+              onToggleComplete={onToggleComplete}
             />
           ))
         ) : (
