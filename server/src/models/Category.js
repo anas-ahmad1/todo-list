@@ -1,22 +1,27 @@
 const mongoose = require("mongoose");
 
-const categorySchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
+const categorySchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    todoCount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    completedCount: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
   },
-  todoCount: {
-    type: Number,
-    default: 0,
-    min: 0,
-  },
-  completedCount: {
-    type: Number,
-    default: 0,
-    min: 0,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 const Category = mongoose.model("Category", categorySchema);
 
