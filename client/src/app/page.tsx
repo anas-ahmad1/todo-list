@@ -14,8 +14,8 @@ export default function Home() {
   };
 
   return (
-    <ProtectedRoute>
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-r from-blue-400 to-purple-600 text-white px-6">
+    
+    <div className="min-h-screen flex flex-col mt-20 items-center px-6">
       <h1 className="text-4xl md:text-6xl font-bold mb-6 text-center">
         Welcome {user?.name ?? "Guest"}!
       </h1>
@@ -24,11 +24,11 @@ export default function Home() {
       </p>
       <button
         onClick={goToTasks}
-        className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg shadow-lg hover:bg-gray-100 transition-colors"
+        className="px-6 py-3 primary-bg font-semibold rounded-lg shadow-lg hover:bg-gray-100"
       >
         Go to My Tasks
       </button>
     </div>
-    </ProtectedRoute>
+    
   );
 }
