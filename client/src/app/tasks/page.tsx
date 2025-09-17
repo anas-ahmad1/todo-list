@@ -9,6 +9,7 @@ import { BACKEND_ROUTES } from "@/utils/routes";
 import axios from "axios";
 import { API_URL } from "@/utils/config";
 import { ProtectedRoute } from "@/components/AuthRedirects";
+import { useSearchParams } from "next/navigation";
 
 const TodoList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -16,6 +17,9 @@ const TodoList = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("All");
+  const searchParams = useSearchParams();
+  const categoryId = searchParams.get("categoryId") || "";
+  const categoryName = searchParams.get("categoryName") || "";
   const [formData, setFormData] = useState<TaskFormData>({
     title: "",
     description: "",
@@ -29,7 +33,7 @@ const TodoList = () => {
   const fetchTasks = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(url, {
+      const res = await axios.get(`${url}?category=${encodeURIComponent(categoryId)}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -73,7 +77,7 @@ const TodoList = () => {
       try {
         const res = await axios.post(
           url,
-          { ...formData, completed: false },
+          { ...formData, completed: false, category: categoryId },
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -146,7 +150,7 @@ const TodoList = () => {
   return (
     <ProtectedRoute>
       <div className="min-h-screen">
-        <Header onAddTask={handleAddTask} showAddForm={showAddForm} />
+        <Header onAddTask={handleAddTask} showAddForm={showAddForm} categoryName={categoryName} />
 
         <div className="flex w-full mb-4 justify-center">
           <div className="flex gap-2 w-full lg:w-1/2 px-6">
