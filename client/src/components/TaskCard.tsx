@@ -8,9 +8,15 @@ export interface TaskCardProps {
   task: Task;
   isCompleted: boolean;
   onEdit: (task: Task) => void;
+  onDelete: (taskId: string) => void;
 }
 
-const TaskCard: FC<TaskCardProps> = ({ task, isCompleted, onEdit }) => {
+const TaskCard: FC<TaskCardProps> = ({
+  task,
+  isCompleted,
+  onEdit,
+  onDelete,
+}) => {
   const getPriorityColor = (priority: string): string => {
     switch (priority) {
       case "High":
@@ -63,7 +69,12 @@ const TaskCard: FC<TaskCardProps> = ({ task, isCompleted, onEdit }) => {
           {task.dueDate}
         </span>
 
-        <TaskActions task={task} isCompleted={isCompleted} onEdit={onEdit} />
+        <TaskActions
+          task={task}
+          isCompleted={isCompleted}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
       </div>
     </div>
   );

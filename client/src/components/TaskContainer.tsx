@@ -10,6 +10,7 @@ export interface TaskContainerProps {
   emptyMessage: string;
   emptySubMessage: string;
   onEdit: (task: Task) => void;
+  onDelete: (taskId: string) => void;
 }
 
 const TaskContainer: FC<TaskContainerProps> = ({
@@ -19,6 +20,7 @@ const TaskContainer: FC<TaskContainerProps> = ({
   emptyMessage,
   emptySubMessage,
   onEdit,
+  onDelete,
 }) => (
   <div className="w-full xl:w-1/2">
     <div className="bg-white rounded-xl border-2 border-gray-200 p-6 h-full">
@@ -33,6 +35,7 @@ const TaskContainer: FC<TaskContainerProps> = ({
               task={task}
               isCompleted={isCompleted}
               onEdit={onEdit}
+              onDelete={onDelete}
             />
           ))
         ) : (
