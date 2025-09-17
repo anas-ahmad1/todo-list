@@ -42,25 +42,25 @@ export default function Signup() {
   return (
     <>
       <div className="flex min-h-screen">
-        <div className="w-2/5 bg-black flex flex-col justify-center items-center px-6">
-          <h1 className="text-5xl font-bold text-white mb-4 text-center">
-            Create Your TaskFlow Account
+        <div className="w-2/5 flex flex-col justify-center items-center px-6 primary-bg hidden lg:flex">
+          <h1 className="text-5xl font-bold mb-4 text-center">
+            Create Your Account
           </h1>
-          <p className="text-lg text-gray-300 text-center">
+          <p className="text-lg text-center">
             Join TaskFlow and start organizing your tasks effortlessly
           </p>
         </div>
 
 
-        <div className="w-3/5 flex bg-white items-center justify-center">
-          <div className="w-full max-w-md bg-black p-8">
+        <div className="w-full lg:w-3/5 flex items-start lg:items-center justify-center p-8 pt-12">
+          <div className="w-full max-w-md p-8 container-bg rounded-2xl shadow-xl">
             
-            <h1 className="text-3xl text-center text-white">Signup</h1>
+            <h1 className="text-3xl text-center">Signup</h1>
             
             <form onSubmit={handleSubmit(onSubmit)}>
               
               <div className="mb-4">
-                <label htmlFor="name" className="block mb-1 text-white">Name</label>
+                <label htmlFor="name" className="block mb-1 ">Name</label>
                 <input
                   id="name"
                   type="name"
@@ -71,7 +71,7 @@ export default function Signup() {
               </div>
 
               <div className="mb-4">
-                <label htmlFor="email" className="block mb-1 text-white">Email</label>
+                <label htmlFor="email" className="block mb-1 ">Email</label>
                 <input
                   id="email"
                   type="email"
@@ -82,7 +82,7 @@ export default function Signup() {
               </div>
 
               <div className="mb-4">
-                <label htmlFor="password" className="block mb-1 text-white">Password</label>
+                <label htmlFor="password" className="block mb-1 ">Password</label>
                 <div className="relative">
                   <input
                     id="password"
@@ -92,7 +92,7 @@ export default function Signup() {
                   />
                   <button
                     type="button"
-                    className="absolute right-2 top-2 text-white"
+                    className="absolute right-2 top-2 "
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? 'Hide' : 'Show'}
@@ -103,14 +103,14 @@ export default function Signup() {
 
               <button
                 type="submit"
-                className="w-full bg-white text-black py-2 mb-4"
+                className="w-full primary-bg py-2 mb-4 rounded-lg"
               >
                 Signup
               </button>
 
-              <p className="text-center text-sm text-white">
+              <p className="text-center text-sm ">
                 Already have an account?
-                <button type="button" onClick={() => router.push(FRONTEND_ROUTES.AUTH.LOGIN)} className="text-white underline">
+                <button type="button" onClick={() => router.push(FRONTEND_ROUTES.AUTH.LOGIN)} className=" underline ml-2">
                   Login
                 </button>
               </p>

@@ -15,6 +15,9 @@ const Navbar = () => {
     const savedTheme = localStorage.getItem("theme") as "light" | "dark";
     if (savedTheme) {
       setTheme(savedTheme);
+      if(savedTheme === 'dark'){
+        document.documentElement.classList.add("dark-theme");
+      }
     }
   }, []);
 
@@ -22,6 +25,13 @@ const Navbar = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
+
+    const root = document.documentElement;
+    if(newTheme === 'dark'){
+        root.classList.add("dark-theme");
+    } else {
+      root.classList.remove("dark-theme");
+    }
   };
 
   const handleLogout = () => {
@@ -31,8 +41,8 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="w-full px-6 py-3 flex items-center justify-between">
-      <div className="text-2xl">TextFlow</div>
+    <nav className="w-full navbar-bg text-white px-6 py-3 flex items-center justify-between">
+      <h1 className="text-2xl">TaskFlow</h1>
 
       <div className="flex">
         <button
@@ -53,8 +63,8 @@ const Navbar = () => {
         className="relative group"
         onClick={() => setMenuOpen((prev) => !prev)}
       >
-        <button className="font-medium text-white">
-          Welcome, {user?.name || "Guest"}
+        <button className="font-medium">
+          <p>Welcome, {user?.name || "Guest"}</p>
         </button>
         {menuOpen && user && (
           <div className="absolute right-0 mt-2 bg-white border rounded shadow-md z-50">
