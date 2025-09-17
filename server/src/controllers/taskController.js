@@ -17,6 +17,7 @@ const createTask = asyncHandler(async (req, res) => {
         dueDate,
         completed: false,
         user: req.user.id,
+        category: req.category.id
     });
 
     res.status(201).json(task);
