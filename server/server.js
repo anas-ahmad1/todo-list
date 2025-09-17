@@ -14,6 +14,7 @@ app.use(express.json());
 
 app.use('/auth', require('./src/routes/authRoutes'))
 app.use('/tasks', protect, require('./src/routes/taskRoutes'))
+app.use('/categories', protect, require('./src/routes/categoryRoutes'))
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
