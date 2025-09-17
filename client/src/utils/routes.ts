@@ -15,5 +15,6 @@ export const FRONTEND_ROUTES = {
     {
         LOGIN: '/auth/login',
         SIGNUP: '/auth/signup'
-    }
+    },
+    TASKS: '/tasks'
 } as const;
