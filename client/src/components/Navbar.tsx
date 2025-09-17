@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useUser } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
 import { FRONTEND_ROUTES } from "@/utils/routes";
+import { FaSun, FaMoon } from "react-icons/fa";
 
 const Navbar = () => {
   const { user, setUser } = useUser();
@@ -15,6 +16,9 @@ const Navbar = () => {
     const savedTheme = localStorage.getItem("theme") as "light" | "dark";
     if (savedTheme) {
       setTheme(savedTheme);
+      if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark-theme");
+      }
     }
   }, []);
 
@@ -22,6 +26,13 @@ const Navbar = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
+
+    const root = document.documentElement;
+    if (newTheme === "dark") {
+      root.classList.add("dark-theme");
+    } else {
+      root.classList.remove("dark-theme");
+    }
   };
 
   const handleLogout = () => {
@@ -31,21 +42,23 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="w-full px-6 py-3 flex items-center justify-between">
-      <div className="text-2xl">TextFlow</div>
+    <nav className="w-full navbar-bg text-white px-6 py-3 flex items-center justify-between">
+      <h1 className="text-2xl">TaskFlow</h1>
 
       <div className="flex">
         <button
           onClick={toggleTheme}
-          className={`w-12 h-6 flex items-center rounded-full p-1 ${
-            theme === "dark" ? "bg-gray-800" : "bg-gray-300"
-          }`}
+          className="w-12 h-6 flex items-center rounded-full p-1 container-bg"
         >
           <div
-            className={`w-4 h-4 rounded-full bg-white transform transition-transform ${
-              theme === "dark" ? "translate-x-6" : "translate-x-0"
+            className={`w-4 h-4 rounded-full transform transition-transform ${
+              theme === "dark"
+                ? "translate-x-6 text-white"
+                : "translate-x-0 text-yellow-400"
             }`}
-          />
+          >
+            {theme === "dark" ? <FaMoon /> : <FaSun />}
+          </div>
         </button>
       </div>
 
@@ -53,8 +66,8 @@ const Navbar = () => {
         className="relative group"
         onClick={() => setMenuOpen((prev) => !prev)}
       >
-        <button className="font-medium text-white">
-          Welcome, {user?.name || "Guest"}
+        <button className="font-medium">
+          <p>Welcome, {user?.name || "Guest"}</p>
         </button>
         {menuOpen && user && (
           <div className="absolute right-0 mt-2 bg-white border rounded shadow-md z-50">

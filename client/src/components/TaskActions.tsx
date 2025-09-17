@@ -2,6 +2,7 @@
 
 import { FC } from "react";
 import type { Task } from "../utils/types";
+import { FaEdit, FaTrash, FaCheck, FaUndo } from "react-icons/fa";
 
 export interface TaskActionsProps {
   task: Task;
@@ -22,29 +23,30 @@ const TaskActions: FC<TaskActionsProps> = ({
     {!isCompleted && (
       <button
         onClick={() => onEdit(task)}
-        className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
+        className="px-3 py-2 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
       >
-        Edit
+        <FaEdit />
       </button>
     )}
 
     <button
       onClick={() => onDelete(task._id)}
-      className="px-3 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
+      className="px-3 py-2 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
     >
-      Delete
+      <FaTrash />
     </button>
 
     <button
       onClick={() => onToggleComplete(task._id)}
-      className={`px-3 py-1 text-xs rounded transition-colors ${
+      className={`px-3 py-2 text-xs rounded ${
         isCompleted
           ? "bg-gray-100 text-gray-700 hover:bg-gray-200"
           : "bg-green-100 text-green-700 hover:bg-green-200"
       }`}
     >
-      {isCompleted ? "Undo" : "Complete"}
+      {isCompleted ? <FaUndo/> : <FaCheck/>}
     </button>
+
   </div>
 );
 

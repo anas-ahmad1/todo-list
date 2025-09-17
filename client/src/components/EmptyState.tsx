@@ -9,8 +9,8 @@ export interface EmptyStateProps {
 
 const EmptyState: FC<EmptyStateProps> = ({ message, subMessage }) => (
   <div className="text-center py-12">
-    <div className="text-gray-400 text-lg">{message}</div>
-    <div className="text-gray-500 text-sm mt-1">{subMessage}</div>
+    <div className="text-lg">{message}</div>
+    <div className="text-sm mt-1">{subMessage}</div>
   </div>
 );
 

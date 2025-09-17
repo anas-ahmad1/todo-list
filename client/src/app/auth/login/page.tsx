@@ -41,36 +41,36 @@ export default function Login() {
   return (
     <>
       <div className="flex min-h-screen">
-        <div className="w-2/5 bg-black flex flex-col justify-center items-center px-6">
-          <h1 className="text-5xl font-bold text-white mb-4 text-center">
+        <div className="w-2/5 flex flex-col justify-center items-center px-6 primary-bg hidden lg:flex">
+          <h1 className="text-5xl font-bold mb-4 text-center">
             Welcome to TaskFlow
           </h1>
-          <p className="text-lg text-gray-300 text-center">
+          <p className="text-lg text-center">
             Manage your tasks efficiently and stay organized
           </p>
         </div>
 
 
-        <div className="w-3/5 flex bg-white items-center justify-center">
-          <div className="w-full max-w-md bg-black p-8">
+        <div className="w-full lg:w-3/5 flex items-start lg:items-center justify-center p-8 pt-12">
+          <div className="w-full max-w-md p-8 container-bg rounded-2xl shadow-xl">
             
-            <h1 className="text-3xl text-center text-white">Login</h1>
+            <h1 className="text-3xl text-center">Login</h1>
             
             <form onSubmit={handleSubmit(onSubmit)}>
               
               <div className="mb-4">
-                <label htmlFor="email" className="block mb-1 text-white">Email</label>
+                <label htmlFor="email" className="block mb-1">Email</label>
                 <input
                   id="email"
                   type="email"
-                  className="w-full border px-3 py-2"
+                  className="w-full px-3 py-2"
                   {...register('email', { required: 'Email is required' })}
                 />
                 {errors.email && <p className="text-red-500 mt-1 text-sm">{errors.email.message}</p>}
               </div>
 
               <div className="mb-4">
-                <label htmlFor="password" className="block mb-1 text-white">Password</label>
+                <label htmlFor="password" className="block mb-1">Password</label>
                 <div className="relative">
                   <input
                     id="password"
@@ -91,14 +91,14 @@ export default function Login() {
 
               <button
                 type="submit"
-                className="w-full bg-white text-black py-2 mb-4"
+                className="w-full primary-bg py-2 mb-4 rounded-lg"
               >
                 Login
               </button>
 
-              <p className="text-center text-sm text-white">
+              <p className="text-center text-sm">
                 Dont have an account?
-                <button type="button" onClick={() => router.push(FRONTEND_ROUTES.AUTH.SIGNUP)} className="text-white underline">
+                <button type="button" onClick={() => router.push(FRONTEND_ROUTES.AUTH.SIGNUP)} className="underline ml-2">
                   Signup
                 </button>
               </p>

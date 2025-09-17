@@ -25,7 +25,7 @@ const TaskContainer: FC<TaskContainerProps> = ({
   onToggleComplete,
 }) => (
   <div className="w-full xl:w-1/2">
-    <div className="bg-white rounded-xl border-2 border-gray-200 p-6 h-full">
+    <div className="primary-bg rounded-2xl p-6 h-full">
       <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
         {title}
       </h2>
