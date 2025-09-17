@@ -5,6 +5,7 @@ import { useUser } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
 import { FRONTEND_ROUTES } from "@/utils/routes";
 import { FaSun, FaMoon } from "react-icons/fa";
+import Link from "next/link";
 
 const Navbar = () => {
   const { user, setUser } = useUser();
@@ -43,7 +44,9 @@ const Navbar = () => {
 
   return (
     <nav className="w-full navbar-bg text-white px-6 py-3 flex items-center justify-between">
-      <h1 className="text-2xl">TaskFlow</h1>
+      <Link href="/">
+        <h1 className="text-2xl cursor-pointer">TaskFlow</h1>
+      </Link>
 
       <div className="flex">
         <button
