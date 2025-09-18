@@ -39,8 +39,7 @@ export default function Signup() {
       router.push("/");
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;
-      const errorMessage =
-        error.response?.data?.message || "Signup failed";
+      const errorMessage = error.response?.data?.message || "Signup failed";
       toast.error(errorMessage);
     }
   };
@@ -86,11 +85,17 @@ export default function Signup() {
                 <input
                   id="email"
                   type="email"
-                  className="w-full border px-3 py-2"
-                  {...register("email", { required: "Email is required" })}
+                  className="w-full px-3 py-2"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "Enter a valid email address",
+                    },
+                  })}
                 />
                 {errors.email && (
-                  <p className="text-red-500 mt-1 text-sm">
+                  <p className="mt-1 text-sm">
                     {errors.email.message}
                   </p>
                 )}
@@ -119,7 +124,7 @@ export default function Signup() {
                   </button>
                 </div>
                 {errors.password && (
-                  <p className="text-red-500 mt-1 text-sm">
+                  <p className="mt-1 text-sm">
                     {errors.password.message}
                   </p>
                 )}

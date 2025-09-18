@@ -219,7 +219,7 @@ const TodoList = () => {
         )}
 
         <div className="p-6">
-          <div className="flex flex-col xl:flex-row gap-6 min-h-[calc(100vh-200px)]">
+          <div className="flex flex-col md:flex-col lg:flex-row gap-6 min-h-[calc(100vh-200px)]">
             <TaskContainer
               title="Todo"
               tasks={todoTasks}
