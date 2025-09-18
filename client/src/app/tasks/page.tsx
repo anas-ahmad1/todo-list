@@ -1,0 +1,251 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import type { Task, TaskFormData } from "@/utils/types";
+import Header from "@/components/Header";
+import TaskForm from "@/components/TaskForm";
+import TaskContainer from "@/components/TaskContainer";
+import { BACKEND_ROUTES } from "@/utils/routes";
+import axios from "axios";
+import { API_URL } from "@/utils/config";
+import { ProtectedRoute } from "@/components/AuthRedirects";
+import { useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
+import { validateTaskForm } from "@/utils/validation";
+
+const TodoList = () => {
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [priorityFilter, setPriorityFilter] = useState("All");
+  const searchParams = useSearchParams();
+  const categoryId = searchParams.get("categoryId") || "";
+  const categoryName = searchParams.get("categoryName") || "";
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [formData, setFormData] = useState<TaskFormData>({
+    title: "",
+    description: "",
+    priority: "Low",
+    dueDate: "",
+  });
+
+  const url = API_URL + BACKEND_ROUTES.TASKS;
+
+  // Backend call to fetch the list of all tasks for the logged in user
+  const fetchTasks = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        `${url}?category=${encodeURIComponent(categoryId)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setTasks(res.data);
+    } catch (err) {
+      const error = err as AxiosError<{ message: string }>;
+      const errorMessage =
+        error.response?.data?.message || "Failed to fetch tasks";
+      toast.error(errorMessage);
+    }
+  };
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  // Backend call to update a specific task based on its id
+  const updateTask = async (taskId: string, updatedData: Partial<Task>) => {
+    try {
+      const res = await axios.put(`${url}/${taskId}`, updatedData, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      setTasks(tasks.map((task) => (task._id === taskId ? res.data : task)));
+      toast.success("Task updated successfully!");
+    } catch (err) {
+      const error = err as AxiosError<{ message: string }>;
+      const errorMessage =
+        error.response?.data?.message || "Failed to update task";
+      toast.error(errorMessage);
+    }
+  };
+
+  // Shows or hides create task form and clear fields
+  const handleAddTask = () => {
+    setShowAddForm(!showAddForm);
+    setEditingTask(null);
+    setFormData({ title: "", description: "", priority: "Low", dueDate: "" });
+  };
+
+  // Form submission method to create or edit task
+  const handleSubmit = async () => {
+    const { errors: validationErrors, sanitizedData } =
+      validateTaskForm(formData);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setErrors({});
+
+    if (editingTask) {
+      await updateTask(editingTask._id, sanitizedData);
+      setEditingTask(null);
+    } else {
+      try {
+        const res = await axios.post(
+          url,
+          { ...sanitizedData, completed: false, category: categoryId },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        setTasks([...tasks, res.data]);
+        toast.success("Task added successfully!");
+      } catch (err) {
+        const error = err as AxiosError<{ message: string }>;
+        toast.error(error.response?.data?.message || "Failed to add task");
+      }
+    }
+
+    setFormData({ title: "", description: "", priority: "Low", dueDate: "" });
+    setShowAddForm(false);
+  };
+
+  // Opens the form to edit and fills the selected task's data
+  const handleEdit = (task: Task) => {
+    setEditingTask(task);
+    setShowAddForm(true);
+    setFormData({
+      title: task.title,
+      description: task.description || "",
+      priority: task.priority,
+      dueDate: task.dueDate,
+    });
+  };
+
+  // Backend call to delete a specific task
+  const deleteTask = async (taskId: string) => {
+    try {
+      await axios.delete(`${url}/${taskId}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      setTasks(tasks.filter((task) => task._id !== taskId));
+      toast.success("Task deleted successfully!");
+    } catch (err) {
+      const error = err as AxiosError<{ message: string }>;
+      const errorMessage =
+        error.response?.data?.message || "Failed to delete task";
+      toast.error(errorMessage);
+    }
+  };
+
+  const handleDelete = (taskId: string) => {
+    deleteTask(taskId);
+  };
+
+  // Calls the update method when a task is completed
+  const handleMarkComplete = (taskId: string) => {
+    const task = tasks.find((t) => t._id === taskId);
+    if (task) {
+      updateTask(taskId, { completed: !task.completed });
+    }
+  };
+
+  // Filter tasks based on search
+  const filteredTasks = tasks.filter((task) => {
+    const matchesSearch = task.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+
+    const matchesPriority =
+      priorityFilter === "All" || task.priority === priorityFilter;
+
+    return matchesSearch && matchesPriority;
+  });
+
+  // Set todo tasks list and completed tasks list
+  const todoTasks = filteredTasks.filter((task) => !task.completed);
+  const completedTasks = filteredTasks.filter((task) => task.completed);
+
+  return (
+    <ProtectedRoute>
+      <div className="min-h-screen">
+        <Header
+          onAddTask={handleAddTask}
+          showAddForm={showAddForm}
+          categoryName={categoryName}
+        />
+
+        <div className="flex w-full mb-4 justify-center">
+          <div className="flex gap-2 w-full lg:w-1/2 px-6">
+            <input
+              type="text"
+              placeholder="Search tasks..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="border p-2 rounded flex-1 w-3/4"
+            />
+
+            <select
+              value={priorityFilter}
+              onChange={(e) => setPriorityFilter(e.target.value)}
+              className="border p-2 rounded w-1/4"
+            >
+              <option value="All">All</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+        </div>
+
+        {showAddForm && (
+          <TaskForm
+            formData={formData}
+            setFormData={setFormData}
+            onSubmit={handleSubmit}
+            editingTask={editingTask}
+            errors={errors}
+          />
+        )}
+
+        <div className="p-6">
+          <div className="flex flex-col md:flex-col lg:flex-row gap-6 min-h-[calc(100vh-200px)]">
+            <TaskContainer
+              title="Todo"
+              tasks={todoTasks}
+              isCompleted={false}
+              emptyMessage="No tasks yet"
+              emptySubMessage="Add a task to get started"
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onToggleComplete={handleMarkComplete}
+            />
+
+            <TaskContainer
+              title="Completed"
+              tasks={completedTasks}
+              isCompleted={true}
+              emptyMessage="No completed tasks"
+              emptySubMessage="Complete some tasks to see them here"
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onToggleComplete={handleMarkComplete}
+            />
+          </div>
+        </div>
+      </div>
+    </ProtectedRoute>
+  );
+};
+
+export default TodoList;

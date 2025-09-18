@@ -1,0 +1,162 @@
+"use client";
+
+import { ProtectedRoute } from "@/components/AuthRedirects";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/context/UserContext";
+import { BACKEND_ROUTES } from "@/utils/routes";
+import { API_URL } from "@/utils/config";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import CategoryForm from "@/components/CategoryForm";
+import Spinner from "@/components/Spinner";
+import CategoryCard from "@/components/CategoryCard";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
+import { validateCategoryForm } from "@/utils/validation";
+
+interface Category {
+  _id: string;
+  name: string;
+}
+
+export default function Home() {
+  const router = useRouter();
+  const { user } = useUser();
+
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [formData, setFormData] = useState({ name: "" });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const url = API_URL + BACKEND_ROUTES.CATEGORIES;
+
+  // Fetch all categories that belongs to logged in user
+  const fetchCategories = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setCategories(res.data);
+    } catch (err) {
+      const error = err as AxiosError<{ message: string }>;
+      const errorMessage =
+        error.response?.data?.message || "Failed to fetch categories";
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Create new category
+  const handleCategorySubmit = async () => {
+    const { errors: validationErrors, sanitizedData } =
+      validateCategoryForm(formData);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setErrors({});
+
+    try {
+      const res = await axios.post(url, sanitizedData, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      setCategories([...categories, res.data]);
+      toast.success("Category added successfully!");
+    } catch (err) {
+      const error = err as AxiosError<{ message: string }>;
+      toast.error(error.response?.data?.message || "Failed to add category");
+    }
+
+    setFormData({ name: "" });
+    setShowAddForm(false);
+  };
+
+  // Delete existing category
+  const deleteCategory = async (id: string) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`${url}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setCategories(categories.filter((cat) => cat._id !== id));
+      toast.success("Category deleted successfully!");
+    } catch (err) {
+      const error = err as AxiosError<{ message: string }>;
+      const errorMessage =
+        error.response?.data?.message || "Failed to delete category";
+      toast.error(errorMessage);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  return (
+    <ProtectedRoute>
+      <div className="min-h-screen flex flex-col mt-20 items-center px-6">
+        <h1 className="text-4xl md:text-6xl font-bold mb-6 text-center">
+          Welcome {user?.name ?? "Guest"}!
+        </h1>
+        <p className="text-lg md:text-2xl mb-8 text-center max-w-xl">
+          Your personal productivity hub. Track your tasks and stay on top of
+          your day!
+        </p>
+
+        <div className="w-full">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-semibold">My Categories</h2>
+            <button
+              onClick={() => setShowAddForm(!showAddForm)}
+              className="px-4 py-2 rounded-lg shadow primary-bg"
+            >
+              {showAddForm ? "Cancel" : "Add Category"}
+            </button>
+          </div>
+
+          {showAddForm && (
+            <CategoryForm
+              formData={formData}
+              setFormData={setFormData}
+              onSubmit={handleCategorySubmit}
+              errors={errors}
+            />
+          )}
+
+          {loading ? (
+            <Spinner />
+          ) : categories.length === 0 ? (
+            <p className="text-center">No categories yet. Add one above!</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-16">
+              {categories.map((category) => (
+                <CategoryCard
+                  key={category._id}
+                  id={category._id}
+                  name={category.name}
+                  onClick={() =>
+                    router.push(
+                      `/tasks?categoryId=${
+                        category._id
+                      }&categoryName=${encodeURIComponent(category.name)}`
+                    )
+                  }
+                  onDelete={deleteCategory}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </ProtectedRoute>
+  );
+}

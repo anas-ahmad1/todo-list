@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+:root {
+  --background: #F3F4F6;
+  --foreground: #171717;
+  --container-color: #FFFFFF;
+  --primary-color: #A5B4FC;
+  --secondary-color: #7182d3;
+  --text-headings-color: #111827;
+  --text-subheadings-color: #434f66;
+  --input-fields-color: #F3F4F6;
+  --borders-color: #E5E7EB;
+}
+
+:root.dark-theme {
+  --background: #111827;
+  --foreground: #ededed;
+  --container-color: #1F2937;
+  --primary-color: #515aaf;
+  --secondary-color: #38408f;
+  --text-headings-color: #F9FAFB;
+  --text-subheadings-color: #c0c8d6;
+  --input-fields-color: #374151;
+  --borders-color: #4B5563;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.container-bg{
+  background-color: vaR(--container-color);
+}
+
+.primary-bg {
+  background-color: var(--primary-color);
+}
+
+input, select {
+  background-color: var(--input-fields-color);
+  border: 2px solid var(--primary-color);
+  border-radius: 0.5rem;
+}
+
+input:focus,
+select:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(165, 180, 252, 0.5);
+}
+
+.navbar-bg {
+  background-color: var(--primary-color);
+  border-bottom: 4px solid var(--background);
+}
+
+h1, h2, h3 {
+  color: var(--text-headings-color);
+}
+
+p{
+  color: var(--text-subheadings-color)
+}
+
+button:hover{
+  cursor: pointer;
+}
