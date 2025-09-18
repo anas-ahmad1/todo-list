@@ -8,6 +8,8 @@ import { API_URL } from "@/utils/config";
 import { FaSun, FaMoon } from "react-icons/fa";
 import Link from "next/link";
 import axios from "axios";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 const Navbar = () => {
   const { user, setUser } = useUser();

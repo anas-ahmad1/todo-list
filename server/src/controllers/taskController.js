@@ -4,10 +4,9 @@ const asyncHandler = require("express-async-handler");
 // Create a task for the logged in user
 const createTask = asyncHandler(async (req, res) => {
   const { title, description, priority, dueDate, category } = req.body;
-
+  
   if (!title) {
-    res.status(400);
-    throw new Error("Please add a title");
+    return res.status(400).json({ message: "Please add a title" });
   }
 
   const task = await Task.create({
@@ -42,14 +41,12 @@ const getTaskById = asyncHandler(async (req, res) => {
   const task = await Task.findById(req.params.id);
 
   if (!task) {
-    res.status(404);
-    throw new Error("Task not found");
+    return res.status(404).json({ message: "Task not found" });;
   }
 
   // Check if the task found belongs to the logged in user or not
   if (task.user.toString() !== req.user.id) {
-    res.status(401);
-    throw new Error("Not authorized to view this task");
+    return res.status(401).json({ message: "Not authorized to view this task" });;
   }
 
   res.status(200).json(task);
@@ -62,13 +59,11 @@ const updateTask = asyncHandler(async (req, res) => {
   const task = await Task.findById(req.params.id);
 
   if (!task) {
-    res.status(404);
-    throw new Error("Task not found");
+    return res.status(404).json({ message: "Task not found" });;
   }
 
   if (task.user.toString() !== req.user.id) {
-    res.status(401);
-    throw new Error("Not authorized to update this task");
+    return res.status(401).json({ message: "Not authorized to update this task" });;
   }
 
   if (title !== undefined) task.title = title;
@@ -87,13 +82,11 @@ const deleteTask = asyncHandler(async (req, res) => {
   const task = await Task.findById(req.params.id);
 
   if (!task) {
-    res.status(404);
-    throw new Error("Task not found");
+    return res.status(404).json({ message: "Task not found" });
   }
 
   if (task.user.toString() !== req.user.id) {
-    res.status(401);
-    throw new Error("Not authorized to delete this task");
+    return res.status(401).json({ message: "Not authorized to delete this task" });;
   }
 
   await task.deleteOne();

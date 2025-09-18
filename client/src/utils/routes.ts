@@ -1,13 +1,13 @@
 export const BACKEND_ROUTES = {
     AUTH:
     {
-        LOGIN: '/auth/login',
-        REGISTER: '/auth/register',
-        GETUSER: '/auth/me',
-        LOGOUT: '/auth/logout'
+        LOGIN: '/api/auth/login',
+        REGISTER: '/api/auth/register',
+        GETUSER: '/api/auth/me',
+        LOGOUT: '/api/auth/logout'
     }, 
-    TASKS: '/tasks',
-    CATEGORIES: '/categories'
+    TASKS: '/api/tasks',
+    CATEGORIES: '/api/categories'
 
 } as const;
 

@@ -1,12 +1,15 @@
 "use client";
 
 import type { Task, TaskFormData } from "../utils/types";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface TaskFormProps {
   formData: TaskFormData;
   setFormData: (data: TaskFormData) => void;
   onSubmit: () => void;
   editingTask: Task | null;
+  errors: Record<string, string>;
 }
 
 const TaskForm = ({
@@ -14,6 +17,7 @@ const TaskForm = ({
   setFormData,
   onSubmit,
   editingTask,
+  errors
 }: TaskFormProps) => {
   return (
     <div className="container-bg px-6 py-4">
@@ -23,10 +27,7 @@ const TaskForm = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div>
-          <label
-            htmlFor="title"
-            className="block text-sm font-medium mb-1"
-          >
+          <label htmlFor="title" className="block text-sm font-medium mb-1">
             Title
           </label>
           <input
@@ -39,6 +40,7 @@ const TaskForm = ({
             className="w-full px-3 py-2"
             required
           />
+          {errors.title && <p className="text-sm">{errors.title}</p>}
         </div>
 
         <div>
@@ -57,13 +59,11 @@ const TaskForm = ({
             }
             className="w-full px-3 py-2"
           />
+          {errors.description && <p className="text-sm">{errors.description}</p>}
         </div>
 
         <div>
-          <label
-            htmlFor="priority"
-            className="block text-sm font-medium mb-1"
-          >
+          <label htmlFor="priority" className="block text-sm font-medium mb-1">
             Priority
           </label>
           <select
@@ -82,36 +82,37 @@ const TaskForm = ({
             <option value="Medium">Medium</option>
             <option value="High">High</option>
           </select>
+          {errors.priority && <p className="text-sm">{errors.priority}</p>}
         </div>
 
         <div>
-          <label
-            htmlFor="dueDate"
-            className="block text-sm font-medium mb-1"
-          >
+          <label htmlFor="dueDate" className="block text-sm font-medium mb-1">
             Due Date
           </label>
-          <input
+          <DatePicker
             id="dueDate"
-            type="text"
-            placeholder="25 Sep, 2025"
-            value={formData.dueDate}
-            onChange={(e) =>
-              setFormData({ ...formData, dueDate: e.target.value })
+            selected={formData.dueDate ? new Date(formData.dueDate) : null}
+            onChange={(date: Date | null) =>
+              setFormData({
+                ...formData,
+                dueDate: date ? date.toISOString() : "",
+              })
             }
-            className="w-full px-3 py-2"
-            required
+            minDate={new Date()}
+            placeholderText="25 Sep, 2025"
+            className="w-full px-3 py-2 border rounded"
           />
+          {errors.dueDate && <p className="text-sm">{errors.dueDate}</p>}
         </div>
       </div>
       <div className="mt-8 flex justify-center">
-          <button
-            type="button"
-            onClick={onSubmit}
-            className="px-6 py-2 rounded-lg primary-bg"
-          >
-            {editingTask ? "Update Task" : "Add Task"}
-          </button>
+        <button
+          type="button"
+          onClick={onSubmit}
+          className="px-6 py-2 rounded-lg primary-bg"
+        >
+          {editingTask ? "Update Task" : "Add Task"}
+        </button>
       </div>
     </div>
   );

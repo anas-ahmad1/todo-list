@@ -7,6 +7,8 @@ import { API_URL } from '@/utils/config';
 import { BACKEND_ROUTES, FRONTEND_ROUTES } from '@/utils/routes';
 import axios from 'axios';
 import { useUser } from '@/context/UserContext';
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 type LoginFormInputs = {
   email: string
@@ -33,7 +35,10 @@ export default function Login() {
       localStorage.setItem('token', res.data.token);
       router.push('/');
     } catch (err) {
-      console.error((err as Error).message);
+      const error = err as AxiosError<{ message: string }>;
+      const errorMessage =
+        error.response?.data?.message || "Login failed";
+      toast.error(errorMessage);
     }
 
   }

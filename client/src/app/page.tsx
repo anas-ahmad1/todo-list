@@ -10,6 +10,9 @@ import axios from "axios";
 import CategoryForm from "@/components/CategoryForm";
 import Spinner from "@/components/Spinner";
 import CategoryCard from "@/components/CategoryCard";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
+import { validateCategoryForm } from "@/utils/validation";
 
 interface Category {
   _id: string;
@@ -24,9 +27,11 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({ name: "" });
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const url = API_URL + BACKEND_ROUTES.CATEGORIES;
 
+  // Fetch all categories that belongs to logged in user
   const fetchCategories = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -37,33 +42,43 @@ export default function Home() {
       });
       setCategories(res.data);
     } catch (err) {
-      console.error("Error fetching categories:", err);
+      const error = err as AxiosError<{ message: string }>;
+      const errorMessage =
+        error.response?.data?.message || "Failed to fetch categories";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
+  // Create new category
   const handleCategorySubmit = async () => {
+    const { errors: validationErrors, sanitizedData } =
+      validateCategoryForm(formData);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setErrors({});
+
     try {
-      const res = await axios.post(
-        url,
-        { name: formData.name },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      const newCategory: Category = res.data;
-      setCategories([...categories, newCategory]);
+      const res = await axios.post(url, sanitizedData, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      setCategories([...categories, res.data]);
+      toast.success("Category added successfully!");
     } catch (err) {
-      console.error("Error creating category:", (err as Error).message);
+      const error = err as AxiosError<{ message: string }>;
+      toast.error(error.response?.data?.message || "Failed to add category");
     }
 
     setFormData({ name: "" });
     setShowAddForm(false);
   };
 
+  // Delete existing category
   const deleteCategory = async (id: string) => {
     try {
       const token = localStorage.getItem("token");
@@ -73,8 +88,12 @@ export default function Home() {
         },
       });
       setCategories(categories.filter((cat) => cat._id !== id));
+      toast.success("Category deleted successfully!");
     } catch (err) {
-      console.error("Error deleting category:", err);
+      const error = err as AxiosError<{ message: string }>;
+      const errorMessage =
+        error.response?.data?.message || "Failed to delete category";
+      toast.error(errorMessage);
     }
   };
 
@@ -109,6 +128,7 @@ export default function Home() {
               formData={formData}
               setFormData={setFormData}
               onSubmit={handleCategorySubmit}
+              errors={errors}
             />
           )}
 

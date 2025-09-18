@@ -10,6 +10,9 @@ import axios from "axios";
 import { API_URL } from "@/utils/config";
 import { ProtectedRoute } from "@/components/AuthRedirects";
 import { useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
+import { validateTaskForm } from "@/utils/validation";
 
 const TodoList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -20,6 +23,7 @@ const TodoList = () => {
   const searchParams = useSearchParams();
   const categoryId = searchParams.get("categoryId") || "";
   const categoryName = searchParams.get("categoryName") || "";
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState<TaskFormData>({
     title: "",
     description: "",
@@ -33,15 +37,21 @@ const TodoList = () => {
   const fetchTasks = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`${url}?category=${encodeURIComponent(categoryId)}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.get(
+        `${url}?category=${encodeURIComponent(categoryId)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       setTasks(res.data);
     } catch (err) {
-      console.error((err as Error).message);
+      const error = err as AxiosError<{ message: string }>;
+      const errorMessage =
+        error.response?.data?.message || "Failed to fetch tasks";
+      toast.error(errorMessage);
     }
   };
 
@@ -56,8 +66,12 @@ const TodoList = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setTasks(tasks.map((task) => (task._id === taskId ? res.data : task)));
+      toast.success("Task updated successfully!");
     } catch (err) {
-      console.error("Error updating task:", (err as Error).message);
+      const error = err as AxiosError<{ message: string }>;
+      const errorMessage =
+        error.response?.data?.message || "Failed to update task";
+      toast.error(errorMessage);
     }
   };
 
@@ -70,24 +84,35 @@ const TodoList = () => {
 
   // Form submission method to create or edit task
   const handleSubmit = async () => {
+    const { errors: validationErrors, sanitizedData } =
+      validateTaskForm(formData);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setErrors({});
+
     if (editingTask) {
-      await updateTask(editingTask._id, formData);
+      await updateTask(editingTask._id, sanitizedData);
       setEditingTask(null);
     } else {
       try {
         const res = await axios.post(
           url,
-          { ...formData, completed: false, category: categoryId },
+          { ...sanitizedData, completed: false, category: categoryId },
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
         );
-        const newTask: Task = res.data;
-        setTasks([...tasks, newTask]);
+        setTasks([...tasks, res.data]);
+        toast.success("Task added successfully!");
       } catch (err) {
-        console.error("Error creating task:", (err as Error).message);
+        const error = err as AxiosError<{ message: string }>;
+        toast.error(error.response?.data?.message || "Failed to add task");
       }
     }
 
@@ -114,8 +139,12 @@ const TodoList = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setTasks(tasks.filter((task) => task._id !== taskId));
+      toast.success("Task deleted successfully!");
     } catch (err) {
-      console.error("Error deleting task:", (err as Error).message);
+      const error = err as AxiosError<{ message: string }>;
+      const errorMessage =
+        error.response?.data?.message || "Failed to delete task";
+      toast.error(errorMessage);
     }
   };
 
@@ -150,7 +179,11 @@ const TodoList = () => {
   return (
     <ProtectedRoute>
       <div className="min-h-screen">
-        <Header onAddTask={handleAddTask} showAddForm={showAddForm} categoryName={categoryName} />
+        <Header
+          onAddTask={handleAddTask}
+          showAddForm={showAddForm}
+          categoryName={categoryName}
+        />
 
         <div className="flex w-full mb-4 justify-center">
           <div className="flex gap-2 w-full lg:w-1/2 px-6">
@@ -181,6 +214,7 @@ const TodoList = () => {
             setFormData={setFormData}
             onSubmit={handleSubmit}
             editingTask={editingTask}
+            errors={errors}
           />
         )}
 
