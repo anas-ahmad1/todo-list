@@ -101,6 +101,7 @@ const TaskForm = ({
             minDate={new Date()}
             placeholderText="25 Sep, 2025"
             className="w-full px-3 py-2 border rounded"
+            wrapperClassName="w-full" 
           />
           {errors.dueDate && <p className="text-sm">{errors.dueDate}</p>}
         </div>
