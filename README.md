@@ -102,6 +102,16 @@ Frontend
   npm run dev
 ```
 
+Testing user will be created with seed.js file.
+
+Credentials:
+
+email : test@example.com
+
+password: password123
+
+You can use this test user or create a new one to test the appp
+
 
 ## Screenshots
 
