@@ -3,7 +3,8 @@ export const BACKEND_ROUTES = {
     {
         LOGIN: '/auth/login',
         REGISTER: '/auth/register',
-        GETUSER: '/auth/me'
+        GETUSER: '/auth/me',
+        LOGOUT: '/auth/logout'
     }, 
     TASKS: '/tasks',
     CATEGORIES: '/categories'

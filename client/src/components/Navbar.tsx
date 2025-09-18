@@ -3,9 +3,11 @@
 import { useState, useEffect } from "react";
 import { useUser } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
-import { FRONTEND_ROUTES } from "@/utils/routes";
+import { BACKEND_ROUTES, FRONTEND_ROUTES } from "@/utils/routes";
+import { API_URL } from "@/utils/config";
 import { FaSun, FaMoon } from "react-icons/fa";
 import Link from "next/link";
+import axios from "axios";
 
 const Navbar = () => {
   const { user, setUser } = useUser();
@@ -36,10 +38,29 @@ const Navbar = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
-    router.push(FRONTEND_ROUTES.AUTH.LOGIN);
+  const handleLogout = async () => {
+    const url = API_URL + BACKEND_ROUTES.AUTH.LOGOUT;
+
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        await axios.post(
+          url,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }
+    } catch (error) {
+      console.error("Logout failed:", (error as Error).message);
+    } finally {
+      localStorage.removeItem("token");
+      setUser(null);
+      router.push(FRONTEND_ROUTES.AUTH.LOGIN);
+    }
   };
 
   return (
