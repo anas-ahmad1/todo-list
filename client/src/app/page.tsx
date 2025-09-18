@@ -88,7 +88,7 @@ export default function Home() {
         },
       });
       setCategories(categories.filter((cat) => cat._id !== id));
-      toast.success("Task deleted successfully!");
+      toast.success("Category deleted successfully!");
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;
       const errorMessage =

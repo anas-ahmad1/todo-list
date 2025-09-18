@@ -12,9 +12,9 @@ app.use(cors());
 app.use(express.json());
 
 
-app.use('/auth', require('./src/routes/authRoutes'))
-app.use('/tasks', protect, require('./src/routes/taskRoutes'))
-app.use('/categories', protect, require('./src/routes/categoryRoutes'))
+app.use('/api/auth', require('./src/routes/authRoutes'))
+app.use('/api/tasks', protect, require('./src/routes/taskRoutes'))
+app.use('/api/categories', protect, require('./src/routes/categoryRoutes'))
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
