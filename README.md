@@ -156,34 +156,34 @@ Frontend
 
 ## Question and Answers
 
-#### Explain the difference between Server-Side Rendering (SSR) and Client-Side Rendering (CSR). Why did you choose your approach?
+#### 1- Explain the difference between Server-Side Rendering (SSR) and Client-Side Rendering (CSR). Why did you choose your approach?
 
 In SSR the HTML is generated on the server and sent to the client for each request. This can improve initial load times as well as SEO. But in CSR, the server sends mostly blank HTML and JS loads and renders content in browser, this has slower initial load but later on its faster. I have used NextJs with mostly "use client" components, so the pages are rendered on CSR. This was suitable because the app is a single user small app. SSR was not critical for SEO etc. 
 
-#### What is JWT and why is it suitable for authentication in this application?
+#### 2- What is JWT and why is it suitable for authentication in this application?
 
 JWT: JSON Web Token is a token for secure transmission of information between client and server. It has three parts: payload, header, signature. It was suitable because it provides stateless authentication, no need to store sessions. It can easily be sent with requests and used to protect routes.
 
-#### Describe the purpose of middleware in Express.js and provide an example of custom middleware you implemented.
+#### 3- Describe the purpose of middleware in Express.js and provide an example of custom middleware you implemented.
 
 Middleware is a function that has access to 3 things: request, response and next middleware function. It is mostly used for logging, authentication, input validation etc. I have used authMiddleware that checks if the user sending request is allowed to access that route or not.
 
-#### How did you handle state management in your React application? What alternatives could you have used?
+#### 4- How did you handle state management in your React application? What alternatives could you have used?
 
 I have handled state using useState for component level storing. useEffect for side effects. useContext to share user authentication state across app. I could have used redux but it was not suitable for such lightweight project. 
 
-#### What database did you choose and why? What are the pros and cons of your choice?
+#### 5- What database did you choose and why? What are the pros and cons of your choice?
 
 MongoDb
 Pros: Flexibility and easy integration with nodeJs. 
 Cons: Less strict schema, harder for complex queries
 
-#### How did you structure your API routes? What REST principles did you follow?
+#### 6- How did you structure your API routes? What REST principles did you follow?
 
 Routes follow standard REST conventions under /tasks and /auth.
 Proper HTTP verbs, resource-based URIs, and stateless communication using JWT
 
-#### What security measures did you implement to protect user data?
+#### 7- What security measures did you implement to protect user data?
 
 Password hashing using bcrypt.
 Authentication using JWT.
@@ -191,7 +191,7 @@ Protected routes through middleware.
 JWT Blacklisting.
 Input validation and sanitization.
 
-#### How did you handle errors in both frontend and backend? Provide examples.
+#### 8- How did you handle errors in both frontend and backend? Provide examples.
 
 Wrapped calls in try catch block and send responses as JSON and receive them in frontend and display using Toastify. 
 Example:
@@ -216,14 +216,15 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 ```
 
-#### What was the most challenging part of this project and how did you solve it?
+#### 9- What was the most challenging part of this project and how did you solve it?
 
 I think I did not face any such challenge in technical things. The most challenging was the time management along with my current job and ongoing family event. Other than that documentation was a bit new thing for me so that took time. 
 
-#### If you had more time, what improvements would you make to the application?
+#### 10- If you had more time, what improvements would you make to the application?
 
 Some ui improvements could have been made like drag and drop of tasks. But more importantly I would have focused more on optimizing the current code and doing better testing before the submission.
 Like using a more secure way of storing token instead of localStorage.
 Implementing separation of concern even more.
 Remove redundancy even more.
 And yes I would also have added API documentation here in readme. I could not because of lack of time.
+I would also have deployed the app on a free hosting site. 
