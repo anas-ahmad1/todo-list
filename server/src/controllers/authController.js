@@ -8,16 +8,14 @@ const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
-    res.status(400);
-    throw new Error("Please add all fields");
+    return res.status(400).json({ message: "Please add all fields" });
   }
 
   // Check if user exists
   const userExists = await User.findOne({ email });
 
   if (userExists) {
-    res.status(400).json({ message: "User already exists" });
-    throw new Error("User already exists");
+    return res.status(400).json({ message: "User already exists" });
   }
 
   // Hash the password
@@ -39,8 +37,7 @@ const registerUser = asyncHandler(async (req, res) => {
       token: generateToken(user._id),
     });
   } else {
-    res.status(400);
-    throw new Error("Invalid user data");
+    return res.status(400).json({ message: "Invalid user data" });
   }
 });
 
@@ -59,8 +56,7 @@ const loginUser = asyncHandler(async (req, res) => {
       token: generateToken(user._id),
     });
   } else {
-    res.status(400).json({ message: "Invalid credentials" });
-    throw new Error("Invalid credentials");
+    return res.status(400).json({ message: "Invalid credentials" });
   }
 });
 
@@ -72,14 +68,12 @@ const logoutUser = asyncHandler(async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    res.status(400).json({ message: "No token provided" });
-    throw new Error("No token provided");
+    return res.status(400).json({ message: "No token provided" });
   }
 
   const decoded = jwt.decode(token);
   if (!decoded || !decoded.exp) {
-    res.status(400).json({ message: "Invalid token" });
-    throw new Error("Invalid token");
+    return res.status(400).json({ message: "Invalid token" });
   }
 
   await TokenBlacklist.create({

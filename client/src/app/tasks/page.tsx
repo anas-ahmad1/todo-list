@@ -10,6 +10,8 @@ import axios from "axios";
 import { API_URL } from "@/utils/config";
 import { ProtectedRoute } from "@/components/AuthRedirects";
 import { useSearchParams } from "next/navigation";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 const TodoList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -33,15 +35,21 @@ const TodoList = () => {
   const fetchTasks = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`${url}?category=${encodeURIComponent(categoryId)}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.get(
+        `${url}?category=${encodeURIComponent(categoryId)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       setTasks(res.data);
     } catch (err) {
-      console.error((err as Error).message);
+      const error = err as AxiosError<{ message: string }>;
+      const errorMessage =
+        error.response?.data?.message || "Failed to fetch tasks";
+      toast.error(errorMessage);
     }
   };
 
@@ -56,8 +64,12 @@ const TodoList = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setTasks(tasks.map((task) => (task._id === taskId ? res.data : task)));
+      toast.success("Task updated successfully!");
     } catch (err) {
-      console.error("Error updating task:", (err as Error).message);
+      const error = err as AxiosError<{ message: string }>;
+      const errorMessage =
+        error.response?.data?.message || "Failed to update task";
+      toast.error(errorMessage);
     }
   };
 
@@ -86,8 +98,12 @@ const TodoList = () => {
         );
         const newTask: Task = res.data;
         setTasks([...tasks, newTask]);
+        toast.success("Task added successfully!");
       } catch (err) {
-        console.error("Error creating task:", (err as Error).message);
+        const error = err as AxiosError<{ message: string }>;
+        const errorMessage =
+          error.response?.data?.message || "Failed to add task";
+        toast.error(errorMessage);
       }
     }
 
@@ -114,8 +130,12 @@ const TodoList = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setTasks(tasks.filter((task) => task._id !== taskId));
+      toast.success("Task deleted successfully!");
     } catch (err) {
-      console.error("Error deleting task:", (err as Error).message);
+      const error = err as AxiosError<{ message: string }>;
+      const errorMessage =
+        error.response?.data?.message || "Failed to delete task";
+      toast.error(errorMessage);
     }
   };
 
@@ -150,7 +170,11 @@ const TodoList = () => {
   return (
     <ProtectedRoute>
       <div className="min-h-screen">
-        <Header onAddTask={handleAddTask} showAddForm={showAddForm} categoryName={categoryName} />
+        <Header
+          onAddTask={handleAddTask}
+          showAddForm={showAddForm}
+          categoryName={categoryName}
+        />
 
         <div className="flex w-full mb-4 justify-center">
           <div className="flex gap-2 w-full lg:w-1/2 px-6">

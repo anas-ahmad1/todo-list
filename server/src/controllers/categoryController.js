@@ -6,8 +6,7 @@ const createCategory = asyncHandler(async (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.status(400);
-    throw new Error("Please add a name");
+    return res.status(400).json({ message: "Please add a name" });
   }
 
   const category = await Category.create({
@@ -29,13 +28,11 @@ const deleteCategory = asyncHandler(async (req, res) => {
   const category = await Category.findById(req.params.id);
 
   if (!category) {
-    res.status(404);
-    throw new Error("Category not found");
+    return res.status(404).json({ message: "Category not found" });;
   }
 
   if (category.user.toString() !== req.user.id) {
-    res.status(401);
-    throw new Error("Not authorized to delete this category");
+    return res.status(401).json({ message: "Not authorized to delete this category" });;
   }
 
   await category.deleteOne();

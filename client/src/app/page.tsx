@@ -10,6 +10,8 @@ import axios from "axios";
 import CategoryForm from "@/components/CategoryForm";
 import Spinner from "@/components/Spinner";
 import CategoryCard from "@/components/CategoryCard";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 interface Category {
   _id: string;
@@ -37,7 +39,10 @@ export default function Home() {
       });
       setCategories(res.data);
     } catch (err) {
-      console.error("Error fetching categories:", err);
+      const error = err as AxiosError<{ message: string }>;
+      const errorMessage =
+        error.response?.data?.message || "Failed to fetch categories";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -56,8 +61,12 @@ export default function Home() {
       );
       const newCategory: Category = res.data;
       setCategories([...categories, newCategory]);
+      toast.success("Category added successfully!");
     } catch (err) {
-      console.error("Error creating category:", (err as Error).message);
+      const error = err as AxiosError<{ message: string }>;
+      const errorMessage =
+        error.response?.data?.message || "Failed to add category";
+      toast.error(errorMessage);
     }
 
     setFormData({ name: "" });
@@ -73,8 +82,12 @@ export default function Home() {
         },
       });
       setCategories(categories.filter((cat) => cat._id !== id));
+      toast.success("Task deleted successfully!");
     } catch (err) {
-      console.error("Error deleting category:", err);
+      const error = err as AxiosError<{ message: string }>;
+      const errorMessage =
+        error.response?.data?.message || "Failed to delete category";
+      toast.error(errorMessage);
     }
   };
 
