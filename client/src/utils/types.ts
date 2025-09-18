@@ -13,3 +13,7 @@ export type TaskFormData = {
     priority: "Low" | "Medium" | "High";
     dueDate: string;
 };
+
+export interface CategoryFormData {
+  name: string;
+}

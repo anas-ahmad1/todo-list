@@ -9,6 +9,7 @@ interface TaskFormProps {
   setFormData: (data: TaskFormData) => void;
   onSubmit: () => void;
   editingTask: Task | null;
+  errors: Record<string, string>;
 }
 
 const TaskForm = ({
@@ -16,6 +17,7 @@ const TaskForm = ({
   setFormData,
   onSubmit,
   editingTask,
+  errors
 }: TaskFormProps) => {
   return (
     <div className="container-bg px-6 py-4">
@@ -38,6 +40,7 @@ const TaskForm = ({
             className="w-full px-3 py-2"
             required
           />
+          {errors.title && <p className="text-sm">{errors.title}</p>}
         </div>
 
         <div>
@@ -56,6 +59,7 @@ const TaskForm = ({
             }
             className="w-full px-3 py-2"
           />
+          {errors.description && <p className="text-sm">{errors.description}</p>}
         </div>
 
         <div>
@@ -78,6 +82,7 @@ const TaskForm = ({
             <option value="Medium">Medium</option>
             <option value="High">High</option>
           </select>
+          {errors.priority && <p className="text-sm">{errors.priority}</p>}
         </div>
 
         <div>
@@ -97,6 +102,7 @@ const TaskForm = ({
             placeholderText="25 Sep, 2025"
             className="w-full px-3 py-2 border rounded"
           />
+          {errors.dueDate && <p className="text-sm">{errors.dueDate}</p>}
         </div>
       </div>
       <div className="mt-8 flex justify-center">

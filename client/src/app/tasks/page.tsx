@@ -12,6 +12,7 @@ import { ProtectedRoute } from "@/components/AuthRedirects";
 import { useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
+import { validateTaskForm } from "@/utils/validation";
 
 const TodoList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -22,6 +23,7 @@ const TodoList = () => {
   const searchParams = useSearchParams();
   const categoryId = searchParams.get("categoryId") || "";
   const categoryName = searchParams.get("categoryName") || "";
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState<TaskFormData>({
     title: "",
     description: "",
@@ -82,28 +84,35 @@ const TodoList = () => {
 
   // Form submission method to create or edit task
   const handleSubmit = async () => {
+    const { errors: validationErrors, sanitizedData } =
+      validateTaskForm(formData);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setErrors({});
+
     if (editingTask) {
-      await updateTask(editingTask._id, formData);
+      await updateTask(editingTask._id, sanitizedData);
       setEditingTask(null);
     } else {
       try {
         const res = await axios.post(
           url,
-          { ...formData, completed: false, category: categoryId },
+          { ...sanitizedData, completed: false, category: categoryId },
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
         );
-        const newTask: Task = res.data;
-        setTasks([...tasks, newTask]);
+        setTasks([...tasks, res.data]);
         toast.success("Task added successfully!");
       } catch (err) {
         const error = err as AxiosError<{ message: string }>;
-        const errorMessage =
-          error.response?.data?.message || "Failed to add task";
-        toast.error(errorMessage);
+        toast.error(error.response?.data?.message || "Failed to add task");
       }
     }
 
@@ -205,6 +214,7 @@ const TodoList = () => {
             setFormData={setFormData}
             onSubmit={handleSubmit}
             editingTask={editingTask}
+            errors={errors}
           />
         )}
 
