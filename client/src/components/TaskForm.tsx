@@ -37,7 +37,7 @@ const TaskForm = ({
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
             }
-            className="w-full px-3 py-2"
+            className="w-full px-3 h-12"
             required
           />
           {errors.title && <p className="text-sm">{errors.title}</p>}
@@ -57,7 +57,7 @@ const TaskForm = ({
             onChange={(e) =>
               setFormData({ ...formData, description: e.target.value })
             }
-            className="w-full px-3 py-2"
+            className="w-full px-3 h-12"
           />
           {errors.description && <p className="text-sm">{errors.description}</p>}
         </div>
@@ -75,7 +75,7 @@ const TaskForm = ({
                 priority: e.target.value as "Low" | "Medium" | "High",
               })
             }
-            className="w-full px-3 py-2"
+            className="w-full px-3 h-12"
             required
           >
             <option value="Low">Low</option>
@@ -100,7 +100,7 @@ const TaskForm = ({
             }
             minDate={new Date()}
             placeholderText="25 Sep, 2025"
-            className="w-full px-3 py-2 border rounded"
+            className="w-full px-3 h-12 border rounded"
             wrapperClassName="w-full" 
           />
           {errors.dueDate && <p className="text-sm">{errors.dueDate}</p>}
