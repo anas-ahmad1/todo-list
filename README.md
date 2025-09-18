@@ -107,37 +107,37 @@ Frontend
 
 #### Login Page
 **Dark Mode**  
-![Login Dark](client/screenshots/login-dark.png)
+![Login Dark](client/screenshots/login-dark.jpeg)
 
 **Light Mode**  
-![Login Light](client/screenshots/login-light.png)
+![Login Light](client/screenshots/login-light.jpeg)
 
 ---
 
 #### Signup Page
 **Dark Mode**  
-![Signup Dark](client/screenshots/signup-dark.png)
+![Signup Dark](client/screenshots/signup-dark.jpeg)
 
 **Light Mode**  
-![Signup Light](client/screenshots/signup-light.png)
+![Signup Light](client/screenshots/signup-light.jpeg)
 
 ---
 
 #### Categories Page
 **Dark Mode**  
-![Categories Dark](client/screenshots/categories-dark.png)
+![Categories Dark](client/screenshots/categories-dark.jpeg)
 
 **Light Mode**  
-![Categories Light](client/screenshots/categories-light.png)
+![Categories Light](client/screenshots/categories-light.jpeg)
 
 ---
 
 #### Tasks Page
 **Dark Mode**  
-![Tasks Dark](client/screenshots/tasks-dark.png)
+![Tasks Dark](client/screenshots/tasks-dark.jpeg)
 
 **Light Mode**  
-![Tasks Light](client/screenshots/tasks-light.png)
+![Tasks Light](client/screenshots/tasks-light.jpeg)
 
 
 
